@@ -1,37 +1,28 @@
-# Code Book - Human Activity Recognition Summary
+# Getting and Cleaning Data Course Project
 
-## 1. Project Description
-This project summarizes sensor data from the **UCI Human Activity Recognition Using Smartphones Dataset**. The goal was to take raw data captured by smartphone accelerometers and gyroscopes and transform it into a "tidy" summary table of averages.
+This repository contains the R script and documentation for the Coursera "Getting and Cleaning Data" Course Project, which utilizes the UCI Human Activity Recognition dataset.
 
-## 2. Source Data
-* **Participants:** 30 volunteers (subjects).
-* **Activities:** 6 different physical activities (Walking, Walking Upstairs, Walking Downstairs, Sitting, Standing, Laying).
-* **Equipment:** Samsung Galaxy S II smartphone.
+## Project Goal
+The purpose of this project is to demonstrate the ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis.
 
-## 3. Transformation Steps
-The following steps were performed by the `run_analysis.R` script:
+## Files in this Repository
+* `run_analysis.R`: The R script that performs all 5 steps of the data cleaning process.
+* `CodeBook.md`: A code book that describes the variables, the data, and the specific transformations performed.
+* `README.md`: This file, providing an overview of the project and the script logic.
+* `final_tidy_summary.txt`: The final output dataset (the tidy summary of averages).
 
-### Step 1: Assembly and Merging
-* **Horizontal Assembly:** The `subject`, `activity` (y), and `measurement` (X) files were joined side-by-side using `cbind()` for both the training and test sets.
-* **Vertical Integration:** The training and test data frames were stacked using `rbind()` to create a master dataset of 10,299 observations.
+## How to Run the Script
+1. Download the data from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
+2. Unzip the file into your R working directory. You should see a folder named `UCI HAR Dataset`.
+3. Open RStudio and ensure the `dplyr` library is installed.
+4. Run the script using `source("run_analysis.R")`.
+5. The script will produce a file named `final_tidy_summary.txt` in your working directory.
 
-### Step 2: Feature Extraction
-* Used the `dplyr` `select()` and `contains()` functions to extract the `subject`, `activity`, and any columns containing the strings **"mean"** or **"std"**. Note: This reorders the data so all mean columns appear before all standard deviation columns.
+## Script Logic (The 5 Steps)
+The `run_analysis.R` script follows these specific requirements:
 
-### Step 3: Descriptive Activity Names
-* Converted the `activity` column into a **factor** using labels from `activity_labels.txt` (e.g., 1 became "WALKING").
-
-### Step 4: Descriptive Variable Labeling
-* Applied names from `features.txt` to the dataset columns to ensure variables like `tBodyAcc-mean()-X` are clearly identified.
-
-### Step 5: Final Aggregation (Tidy Data)
-* Grouped the data by `subject` and `activity` and calculated the `mean()` of all measurements using `summarise_all()`.
-* The final output is a tidy dataset with **180 rows** (30 subjects x 6 activities).
-
-## 4. Variables in the Tidy Dataset
-* **subject**: Integer. ID of the volunteer (1-30).
-* **activity**: Factor. The type of activity performed (e.g., WALKING).
-* **Measurements**: Numeric values representing the **average** of the original mean and standard deviation features. (Examples: `tBodyAcc-mean()-X`, `tGravityAcc-std()-Z`).
-
-## 5. Units
-* Sensor measurements are normalized and bounded within [-1, 1]. They are unitless ratios.
+1. **Merge Data**: It uses `cbind()` to join the subject, activity, and measurement files for both the training and test sets, then uses `rbind()` to merge them into one master dataset (`combined_data`).
+2. **Extract Measurements**: It uses the `select()` and `contains()` functions to extract only the columns representing the mean and standard deviation for each measurement.
+3. **Descriptive Activity Names**: It matches the activity codes with the `activity_labels.txt` file to replace integers (1-6) with names like "WALKING".
+4. **Appropriate Labeling**: It applies descriptive variable names from the `features.txt` file to the column headers.
+5. **Create Tidy Dataset**: It groups the data by subject and activity and uses `summarise_all(mean)` to calculate the average of each variable for each activity and each subject.
